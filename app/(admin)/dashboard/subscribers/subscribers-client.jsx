@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
+import { PaginationControls } from "@/components/dashboard/pagination-controls";
 
-// This component receives the initial data as a prop
-export function SubscribersClient({ initialSubscribers }) {
+export function SubscribersClient({ subscribers, currentPage, totalPages }) {
   const router = useRouter();
 
   const handleDelete = async (subscriberId) => {
@@ -18,9 +18,7 @@ export function SubscribersClient({ initialSubscribers }) {
       loading: 'Deleting subscriber...',
       success: (res) => {
         if (!res.ok) throw new Error('Something went wrong.');
-        // router.refresh() tells Next.js to re-fetch the data on the server
-        // for the current route, which will update our table.
-        router.refresh(); 
+        router.refresh();
         return 'Subscriber deleted successfully!';
       },
       error: 'Failed to delete subscriber.',
@@ -39,18 +37,17 @@ export function SubscribersClient({ initialSubscribers }) {
             <TableRow>
               <TableHead>Email</TableHead>
               <TableHead>Phone / WhatsApp</TableHead>
-              <TableHead>Subscription Type</TableHead>
               <TableHead>Date Joined</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {initialSubscribers.length > 0 ? (
-              initialSubscribers.map((subscriber) => (
+            {subscribers.length > 0 ? (
+              subscribers.map((subscriber) => (
                 <TableRow key={subscriber.id}>
                   <TableCell className="font-medium">{subscriber.email}</TableCell>
                   <TableCell>{subscriber.phone || 'N/A'}</TableCell>
-                  <TableCell>{subscriber.type}</TableCell>
+                  {/* CORRECTED LINE BELOW */}
                   <TableCell>{new Date(subscriber.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
                     <AlertDialog>
@@ -62,7 +59,7 @@ export function SubscribersClient({ initialSubscribers }) {
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>This will permanently delete the subscriber and remove them from your list.</AlertDialogDescription>
+                          <AlertDialogDescription>This will permanently delete the subscriber.</AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -75,7 +72,7 @@ export function SubscribersClient({ initialSubscribers }) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan="5" className="text-center h-24">
+                <TableCell colSpan="4" className="text-center h-24">
                   No subscribers yet.
                 </TableCell>
               </TableRow>
@@ -83,6 +80,11 @@ export function SubscribersClient({ initialSubscribers }) {
           </TableBody>
         </Table>
       </div>
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        basePath="/dashboard/subscribers"
+      />
     </div>
   );
 }

@@ -1,23 +1,35 @@
 import prisma from '@/lib/prisma';
-import { SubscribersClient } from './subscribers-client'; // Import the new client component
+import { SubscribersClient } from './subscribers-client';
 
-// This is the SERVER COMPONENT. It can be async.
-async function getSubscribers() {
-  try {
-    const subscribers = await prisma.subscriber.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
-    return subscribers;
-  } catch (error) {
-    console.error("Failed to fetch subscribers:", error);
-    // Return an empty array in case of an error so the page doesn't crash
-    return [];
-  }
+const ITEMS_PER_PAGE = 10;
+
+// This function now handles pagination logic
+async function getSubscribers(page = 1) {
+  const skip = (page - 1) * ITEMS_PER_PAGE;
+
+  const subscribers = await prisma.subscriber.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: ITEMS_PER_PAGE,
+    skip: skip,
+  });
+
+  const totalCount = await prisma.subscriber.count();
+
+  return { subscribers, totalCount };
 }
 
-export default async function SubscribersPage() {
-  const subscribers = await getSubscribers();
-  
-  // It fetches the data and passes it down to the client component.
-  return <SubscribersClient initialSubscribers={subscribers} />;
+// The page now gets the page number from the URL
+export default async function SubscribersPage({ searchParams }) {
+  const page = parseInt(searchParams.page || '1', 10);
+  const { subscribers, totalCount } = await getSubscribers(page);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  return (
+    <SubscribersClient
+      subscribers={subscribers}
+      currentPage={page}
+      totalPages={totalPages}
+    />
+  );
 }
