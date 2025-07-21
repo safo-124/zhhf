@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users } from "lucide-react";
+import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,6 +55,13 @@ export default async function DashboardLayout({ children }) {
                 <Mail className="h-4 w-4" />
                 Subscribers
               </Link>
+              <Link
+  href="/dashboard/blog" // Add this link
+  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+>
+  <Newspaper className="h-4 w-4" /> 
+  Blog
+</Link>
             </nav>
           </div>
         </div>

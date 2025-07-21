@@ -13,6 +13,7 @@ function PublicHeader() {
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link href="/events">Events</Link>
+            <Link href="/blog">Blog</Link>
             <Link href="/gallery">Gallery</Link>
             <Link href="/donate">Donate</Link>
           </nav>

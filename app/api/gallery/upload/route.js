@@ -12,24 +12,24 @@ export async function POST(request) {
   }
 
   try {
-    // Step 1: Upload the file to Vercel Blob
     const blob = await put(filename, request.body, {
       access: 'public',
+      addRandomSuffix: true, // <-- THIS IS THE FIX
     });
 
-    // Step 2: Save the public URL from the blob and the caption to our database
     const galleryImage = await prisma.galleryImage.create({
       data: {
-        imageUrl: blob.url, // Use the URL from the successful upload
+        imageUrl: blob.url,
         caption: caption,
       },
     });
 
-    // Return the database record as confirmation
     return NextResponse.json(galleryImage);
-
+    
   } catch (error) {
-    console.error("Upload failed:", error);
-    return NextResponse.json({ error: "Failed to process upload." }, { status: 500 });
+    console.error("Upload Error:", error);
+    // Forward the specific Vercel Blob error message if it exists
+    const errorMessage = error.message || "Failed to process upload.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

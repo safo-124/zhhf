@@ -97,3 +97,14 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  slug        String   @unique // For clean URLs like /blog/my-first-post
+  content     String   @db.Text // Use @db.Text for long content
+  published   Boolean  @default(false)
+  imageUrl    String?  @map("image_url")
+}
