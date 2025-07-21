@@ -12,11 +12,13 @@ function PublicHeader() {
             <span className="hidden font-bold sm:inline-block">ZHHF</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
+            <Link href="/about">About Us</Link>
             <Link href="/events">Events</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/campaigns">Campaigns</Link>
             <Link href="/gallery">Gallery</Link>
             <Link href="/donate">Donate</Link>
+            <Link href="/contact">Contact</Link>
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">

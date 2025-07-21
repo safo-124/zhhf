@@ -2,23 +2,22 @@ import prisma from '@/lib/prisma';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
+import { ShareButtons } from '@/components/share-buttons';
 
-// This function runs on the server to get the post data
 async function getPost(slug) {
   const post = await prisma.post.findUnique({
     where: {
       slug: slug,
-      published: true, // Only show published posts
+      published: true,
     },
   });
 
   if (!post) {
-    notFound(); // If no post is found, show the 404 page
+    notFound();
   }
   return post;
 }
 
-// The page component receives `params` which contains the slug
 export default async function BlogPostPage({ params }) {
   const post = await getPost(params.slug);
 
@@ -49,6 +48,9 @@ export default async function BlogPostPage({ params }) {
           className="prose dark:prose-invert max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        <ShareButtons title={post.title} />
+
       </article>
     </main>
   );

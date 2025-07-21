@@ -1,34 +1,37 @@
 import prisma from '@/lib/prisma';
+import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PaginationControls } from '@/components/dashboard/pagination-controls';
-import { StatCard } from '@/components/dashboard/stat-card'; // Import the new component
-import { Users, HandHeart, Calendar, DollarSign } from 'lucide-react'; // Import icons
+import { StatCard } from '@/components/dashboard/stat-card';
+import { Users, HandHeart, Calendar, DollarSign } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 10;
 
-// This function now fetches all dashboard stats at once
 async function getDashboardData(page = 1) {
   const skip = (page - 1) * ITEMS_PER_PAGE;
   
   const today = new Date();
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  // Use Promise.all to fetch data concurrently
   const [donations, donationCount, donationCountThisMonth, subscriberCount, eventCount] = await Promise.all([
     prisma.donation.findMany({
       orderBy: { createdAt: 'desc' },
       take: ITEMS_PER_PAGE,
       skip: skip,
+      // --- NEW: Include the related campaign's title ---
+      include: {
+        campaign: {
+          select: {
+            title: true,
+          },
+        },
+      },
     }),
     prisma.donation.count(),
-    prisma.donation.count({
-      where: { createdAt: { gte: startOfMonth } },
-    }),
+    prisma.donation.count({ where: { createdAt: { gte: startOfMonth } } }),
     prisma.subscriber.count(),
-    prisma.event.count({
-      where: { eventDate: { gte: today } },
-    }),
+    prisma.event.count({ where: { eventDate: { gte: today } } }),
   ]);
 
   return { donations, donationCount, donationCountThisMonth, subscriberCount, eventCount };
@@ -86,13 +89,15 @@ export default async function DashboardPage({ searchParams }) {
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Type</TableHead>
+                  {/* --- NEW: Campaign Column --- */}
+                  <TableHead>Campaign</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {donations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan="4" className="text-center">No donations yet.</TableCell>
+                    <TableCell colSpan="5" className="text-center">No donations yet.</TableCell>
                   </TableRow>
                 ) : (
                   donations.map((donation) => (
@@ -100,6 +105,14 @@ export default async function DashboardPage({ searchParams }) {
                       <TableCell className="font-medium">{donation.name}</TableCell>
                       <TableCell>{donation.email}</TableCell>
                       <TableCell>{donation.donationType}</TableCell>
+                      {/* --- NEW: Campaign Cell --- */}
+                      <TableCell className="text-muted-foreground">
+                        {donation.campaign ? (
+                           <Link href={`/dashboard/campaigns`} className="hover:underline">{donation.campaign.title}</Link>
+                        ) : (
+                          'General'
+                        )}
+                      </TableCell>
                       <TableCell>{new Date(donation.createdAt).toLocaleDateString()}</TableCell>
                     </TableRow>
                   ))
