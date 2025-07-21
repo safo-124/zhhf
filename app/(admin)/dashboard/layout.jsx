@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users, Newspaper } from "lucide-react";
+import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users, Newspaper, Target, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -61,6 +61,20 @@ export default async function DashboardLayout({ children }) {
 >
   <Newspaper className="h-4 w-4" /> 
   Blog
+</Link>
+<Link
+  href="/dashboard/campaigns" // Add this link
+  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+>
+  <Target className="h-4 w-4" /> {/* You'll need to import Target from lucide-react */}
+  Campaigns
+</Link>
+<Link
+  href="/dashboard/gallery" // Add this link
+  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+>
+  <Image className="h-4 w-4" /> {/* You'll need to import Target from lucide-react */}
+  Gallery
 </Link>
             </nav>
           </div>

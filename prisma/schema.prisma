@@ -19,6 +19,11 @@ model Donation {
   phone         String
   donationType  String   @map("donation_type") // Maps to a `donation_type` column
   details       String?  // The '?' makes this field optional
+  amount        Decimal? @db.Decimal(10, 2)
+
+  campaignId Int?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id])
+
 }
 
 // 2. Model for Events
@@ -107,4 +112,15 @@ model Post {
   content     String   @db.Text // Use @db.Text for long content
   published   Boolean  @default(false)
   imageUrl    String?  @map("image_url")
+}
+
+model Campaign {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @unique
+  description String   @db.Text
+  goalAmount  Decimal  @db.Decimal(10, 2) // For storing money values
+  isActive    Boolean  @default(true)
+  donations   Donation[] // A campaign can have many donations
 }
