@@ -76,6 +76,20 @@ export default async function DashboardLayout({ children }) {
   <Image className="h-4 w-4" /> {/* You'll need to import Target from lucide-react */}
   Gallery
 </Link>
+<Link
+  href="/dashboard/volunteers" // Add this link
+  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+>
+  <Users className="h-4 w-4" />
+  Volunteers
+</Link>
+<Link
+  href="/dashboard/users" // Add this link
+  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+>
+  <Users className="h-4 w-4" /> {/* You already have Users imported */}
+  Users
+</Link>
             </nav>
           </div>
         </div>

@@ -124,3 +124,13 @@ model Campaign {
   isActive    Boolean  @default(true)
   donations   Donation[] // A campaign can have many donations
 }
+
+model Volunteer {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  name        String
+  email       String   @unique
+  phone       String
+  interests   String?  // e.g., "Event planning, Food drives"
+  availability String?  // e.g., "Weekends"
+}
