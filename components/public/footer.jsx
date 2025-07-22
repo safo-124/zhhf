@@ -6,9 +6,9 @@ export function Footer() {
 
   return (
     <footer className="bg-slate-900 text-slate-300">
-      <div className="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-12 grid grid-cols-1 text-center gap-y-10 sm:grid-cols-2 sm:text-left md:grid-cols-4 gap-x-8">
         {/* Column 1: Brand */}
-        <div className="space-y-4">
+        <div className="space-y-4 flex flex-col items-center sm:items-start">
           <Link href="/" className="flex items-center space-x-2">
             <HandHeart className="h-8 w-8 text-green-400" />
             <span className="text-xl font-bold text-white">ZHHF</span>
