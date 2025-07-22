@@ -134,3 +134,16 @@ model Volunteer {
   interests   String?  // e.g., "Event planning, Food drives"
   availability String?  // e.g., "Weekends"
 }
+
+// ... your other models are here
+
+model Story {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   // e.g., "How ZHHF Helped My Family"
+  author      String   // e.g., "— Jane Doe, Community Member"
+  content     String   @db.Text
+  imageUrl    String?  @map("image_url")
+  published   Boolean  @default(false)
+}

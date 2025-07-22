@@ -1,23 +1,13 @@
 import Link from "next/link";
-import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users, Newspaper, Target, Image } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-// This is a Server Component, so we can check the session here.
+import { CircleUser, Home, Package, HandHeart, CalendarClock, Mail, Users, Newspaper, Target, BookHeart, HeartHandshake } from "lucide-react";
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from "next-auth/next";
 import { redirect } from 'next/navigation';
+import { DashboardHeader } from "@/components/dashboard/dashboard-header"; // Import the new header
 
 export default async function DashboardLayout({ children }) {
   const session = await getServerSession(authOptions);
 
-  // If no session is found, redirect user to the login page.
   if (!session) {
     redirect('/login');
   }
@@ -32,79 +22,24 @@ export default async function DashboardLayout({ children }) {
               <span className="">ZHHF Admin</span>
             </Link>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-              >
-                <Package className="h-4 w-4" />
-                Donations
-              </Link>
-              <Link
-                href="/dashboard/events"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <CalendarClock className="h-4 w-4" />
-                Events
-              </Link>
-              <Link
-                href="/dashboard/subscribers"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <Mail className="h-4 w-4" />
-                Subscribers
-              </Link>
-              <Link
-  href="/dashboard/blog" // Add this link
-  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
->
-  <Newspaper className="h-4 w-4" /> 
-  Blog
-</Link>
-<Link
-  href="/dashboard/campaigns" // Add this link
-  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
->
-  <Target className="h-4 w-4" /> {/* You'll need to import Target from lucide-react */}
-  Campaigns
-</Link>
-<Link
-  href="/dashboard/gallery" // Add this link
-  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
->
-  <Image className="h-4 w-4" /> {/* You'll need to import Target from lucide-react */}
-  Gallery
-</Link>
-<Link
-  href="/dashboard/volunteers" // Add this link
-  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
->
-  <Users className="h-4 w-4" />
-  Volunteers
-</Link>
-<Link
-  href="/dashboard/users" // Add this link
-  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
->
-  <Users className="h-4 w-4" /> {/* You already have Users imported */}
-  Users
-</Link>
+              <Link href="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><Package className="h-4 w-4" />Donations</Link>
+              <Link href="/dashboard/campaigns" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><Target className="h-4 w-4" />Campaigns</Link>
+              <Link href="/dashboard/events" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><CalendarClock className="h-4 w-4" />Events</Link>
+              <Link href="/dashboard/blog" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><Newspaper className="h-4 w-4" />Blog</Link>
+              <Link href="/dashboard/stories" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><BookHeart className="h-4 w-4" />Stories</Link>
+              <Link href="/dashboard/subscribers" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><Mail className="h-4 w-4" />Subscribers</Link>
+              <Link href="/dashboard/volunteers" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><HeartHandshake className="h-4 w-4" />Volunteers</Link>
+              <Link href="/dashboard/users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><Users className="h-4 w-4" />Users</Link>
             </nav>
           </div>
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-           {/* We can add a mobile sidebar toggle here later */}
-           <div className="w-full flex-1">
-            <h1 className="text-lg font-semibold">Donations</h1>
-           </div>
-           <Button variant="secondary" size="icon" className="rounded-full">
-             <CircleUser className="h-5 w-5" />
-             <span className="sr-only">Toggle user menu</span>
-           </Button>
-        </header>
+        {/* Use the new interactive header component, passing the user data */}
+        <DashboardHeader user={session.user} />
+
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
         </main>
