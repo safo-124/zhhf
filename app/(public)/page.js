@@ -231,7 +231,7 @@ export default async function Home() {
                   Moments of <span className="text-green-600">Impact</span>
                 </h2>
                 <p className="mt-4 max-w-2xl mx-auto text-gray-600">
-                  See the difference we're making together
+                  See the difference we are making together
                 </p>
               </AnimatedSection>
             </div>
